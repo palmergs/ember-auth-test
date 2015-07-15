@@ -1,27 +1,41 @@
-import { moduleForComponent, test } from 'ember-qunit';
-import hbs from 'htmlbars-inline-precompile';
-
+import Ember from 'ember';
+import { 
+  moduleForComponent, 
+  test 
+} from 'ember-qunit';
 
 moduleForComponent('star-rating', 'Integration | Component | star rating', {
-  integration: true
+//  integration: true
 });
 
 test('it renders', function(assert) {
   assert.expect(2);
 
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
+  var component = this.subject();
+  assert.equal(component._state, 'preRender');
 
-  this.render(hbs`{{star-rating}}`);
+  this.append();
+  assert.equal(component._state, 'inDOM');
+});
 
-  assert.equal(this.$().text(), '');
+test('Renders the full and empty stars correctly', function(assert) {
+  assert.expect(4);
 
-  // Template block usage:
-  this.render(hbs`
-    {{#star-rating}}
-      template block text
-    {{/star-rating}}
-  `);
+  var component = this.subject();
+  Ember.run(function() {
+    component.setProperties({
+      rating: 4,
+      maxRating: 5
+    });
+  });
 
-  assert.equal(this.$().text().trim(), 'template block text');
+  assert.equal(this.$().find('.glyphicon-star').length, 4, "Full stars are rendered");
+  assert.equal(this.$().find('.glyphicon-star-empty').length, 1, "Empty stars are rendered");
+
+  Ember.run(function() {
+    component.set('maxRating', 10);
+  });
+
+  assert.equal(this.$().find('.glyphicon-star').length, 4, "Full stars are redered with max of 10");
+  assert.equal(this.$().find('.glyphicon-star-empty').length, 6, "Empty stars are rendered with max of 10");
 });
