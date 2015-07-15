@@ -1,5 +1,6 @@
 import DS from 'ember-data';
+import ENV from '../config/environment';
 
 export default DS.RESTAdapter.extend({
-  host: 'http://api.rockandrollwithemberjs.com'
+  host: ENV.apiHost
 });
