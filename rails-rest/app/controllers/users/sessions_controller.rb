@@ -1,13 +1,19 @@
 class Users::SessionsController < Devise::SessionsController
-  respond_to :html, :json
+
+  respond_to :json
 
   def create
+    Rails.logger.debug("In sessions controller create...")
+    Rails.logger.debug("Request format was #{ request.format }")
+    Rails.logger.debug("Request params are #{ params.inspect }")
     super do |user|
+
       if request.format.json?
-        data = { 
+        data = {
           token: user.authentication_token,
           email: user.email
         }
+        Rails.logger.debug("render json and return.")
         render json: data, status: 201 and return
       end
     end
